@@ -58,7 +58,6 @@ function getDomElements() {
     queueBadge: document.getElementById('queue-badge'),
     btnRefresh: document.getElementById('btn-refresh'),
     btnShowQr: document.getElementById('btn-show-qr'),
-    btnOpenTray: document.getElementById('btn-open-tray'),
     qrModal: document.getElementById('qr-modal'),
     btnCloseModal: document.getElementById('btn-close-modal'),
     btnDismissModal: document.getElementById('btn-dismiss-modal'),
@@ -135,17 +134,6 @@ function bindEvents() {
 
   if (el.btnShowQr) {
     el.btnShowQr.addEventListener('click', openQrModal);
-  }
-
-  if (el.btnOpenTray) {
-    el.btnOpenTray.addEventListener('click', async () => {
-      try {
-        await api.post('/api/shop/open-tray', {});
-        showToast('📂 Opening Virtual Printer Tray on PC...', 'info');
-      } catch (err) {
-        window.open('/tray/', '_blank');
-      }
-    });
   }
 
   if (el.btnCloseModal) {
@@ -605,7 +593,6 @@ function renderActionCell(job, isProcessing) {
     return `
       <div class="action-completed-box">
         <span class="badge-printed">✅ Printed &amp; Handed Over</span>
-        ${fileStem ? `<a href="/tray/printed_${escapeHtml(fileStem)}.pdf" target="_blank" class="btn-view-sheet" title="Open and inspect the exact printed paper output">👁️ View Printed Sheet</a>` : ''}
         <div class="countdown-group">
           <span class="auto-delete-hint" data-purge-job-id="${escapeHtml(job.id)}" data-remaining="${remaining}">
             ⏱️ Auto-deleting in <strong class="purge-sec">${remaining}s</strong>

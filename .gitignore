@@ -33,8 +33,6 @@ scans/
 data/
 uploads/*
 !uploads/.gitkeep
-Virtual_Printer_Tray/*
-!Virtual_Printer_Tray/.gitkeep
 pdf-cache/
 libreoffice-profile/
 

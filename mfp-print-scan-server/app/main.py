@@ -130,21 +130,6 @@ if FRONTEND_DIR.exists():
     if (FRONTEND_DIR / "shopkeeper").exists():
         app.mount("/shopkeeper", StaticFiles(directory=str(FRONTEND_DIR / "shopkeeper"), html=True), name="shopkeeper")
 
-# Mount Virtual Printer Tray for physical printer simulation
-VIRTUAL_TRAY_DIR = BASE_DIR.parent.parent / "Virtual_Printer_Tray"
-VIRTUAL_TRAY_DIR.mkdir(parents=True, exist_ok=True)
-app.mount("/tray", StaticFiles(directory=str(VIRTUAL_TRAY_DIR)), name="tray")
-
-@app.post("/api/shop/open-tray")
-@app.get("/api/shop/open-tray")
-def open_virtual_tray_folder():
-    """Opens the Virtual Printer Tray directory in Windows File Explorer on the laptop."""
-    import os
-    try:
-        os.startfile(str(VIRTUAL_TRAY_DIR))
-        return {"status": "ok", "message": "Virtual Printer Tray opened in Windows Explorer", "path": str(VIRTUAL_TRAY_DIR)}
-    except Exception as exc:
-        return {"status": "error", "message": str(exc), "path": str(VIRTUAL_TRAY_DIR)}
 
 # Mount legacy static files if directory exists
 if (BASE_DIR / "static").exists():

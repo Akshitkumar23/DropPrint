@@ -60,9 +60,6 @@ Source: "frontend\*"; DestDir: "{app}\frontend"; Flags: ignoreversion recursesub
 ; Backend Server
 Source: "mfp-print-scan-server\*"; DestDir: "{app}\mfp-print-scan-server"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pyc, __pycache__, .pytest_cache, test_*, *.log, *.db, *.db-*, *.db-wal, *.db-shm, data\*"
 
-; Virtual Printer Output Tray
-Source: "Virtual_Printer_Tray\*"; DestDir: "{app}\Virtual_Printer_Tray"; Flags: ignoreversion recursesubdirs createallsubdirs
-
 ; Bundled Python Virtual Environment & Dependencies
 Source: ".venv\*"; DestDir: "{app}\.venv"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pyc, __pycache__, .pytest_cache"
 
@@ -83,4 +80,3 @@ Filename: "{app}\Stop_DropPrint.bat"; RunOnceId: "StopDropPrintOnUninstall"; Fla
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\mfp-print-scan-server\__pycache__"
 Type: files; Name: "{app}\mfp-print-scan-server\print_system.db*"
-Type: files; Name: "{app}\Virtual_Printer_Tray\*"

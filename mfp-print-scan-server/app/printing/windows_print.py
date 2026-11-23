@@ -393,26 +393,6 @@ class WindowsPrintBackend(PrintBackend):
                 raise
             win32print.EndDoc(hdc)
 
-            # Virtual Printer Tray Simulation: preserve printed output so users without a physical printer can inspect exact paper output
-            try:
-                import shutil
-                tray_dir = Path(__file__).resolve().parent.parent.parent.parent / "Virtual_Printer_Tray"
-                tray_dir.mkdir(parents=True, exist_ok=True)
-                if output_file and Path(output_file).exists():
-                    tray_file = tray_dir / f"printed_{file_path.stem}.pdf"
-                    shutil.copy2(output_file, str(tray_file))
-                    try:
-                        import pypdfium2 as pdfium
-                        doc = pdfium.PdfDocument(str(tray_file))
-                        if len(doc) > 0:
-                            img = doc[0].render(scale=2).to_pil()
-                            img.save(str(tray_dir / f"printed_{file_path.stem}.png"))
-                            doc.close()
-                    except Exception as e:
-                        logger.debug("Tray PNG render: %s", e)
-            except Exception as exc:
-                logger.warning("Virtual Printer Tray capture error: %s", exc)
-
             return job_id
         except PrintError:
             raise
