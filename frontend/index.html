@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickPrint - QR Cloud Printing System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --gray-900: #0f172a;
+      --gray-100: #f1f5f9;
+      --gray-700: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1e38 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .landing-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 36px 30px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+    .icon { font-size: 48px; margin-bottom: 12px; }
+    h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+    p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; margin-bottom: 28px; }
+    .portal-options { display: flex; flex-direction: column; gap: 14px; }
+    .portal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .portal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+      background: #f8fafc;
+    }
+    .btn-customer { border-left: 6px solid #2563eb; }
+    .btn-shopkeeper { border-left: 6px solid #16a34a; }
+    .btn-sub { font-size: 0.78rem; font-weight: 400; color: #64748b; display: block; }
+    .badge-cash {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 6px 14px;
+      background: rgba(234, 179, 8, 0.15);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      color: #fef08a;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="landing-card">
+    <div class="icon">🖨️</div>
+    <h1>QuickPrint Cloud Portal</h1>
+    <p>Mobile-first QR self-service printing & counter control dashboard. Select your portal to continue:</p>
+
+    <div class="portal-options">
+      <a href="./customer/" class="portal-btn btn-customer">
+        <div style="text-align: left;">
+          <div>📱 Customer Self-Service</div>
+          <span class="btn-sub">Scan QR, upload PDF, configure and track</span>
+        </div>
+        <span>&rarr;</span>
+      </a>
+
+      <a href="./shopkeeper/" class="portal-btn btn-shopkeeper">
+        <div style="text-align: left;">
+          <div>🖥️ Shopkeeper Control Center</div>
+          <span class="btn-sub">Manage cash, print approvals, pricing & QR sign</span>
+        </div>
+        <span>&rarr;</span>
+      </a>
+    </div>
+
+    <div class="badge-cash">
+      💵 Strictly Cash Payment at Counter &bull; Zero Online Fees
+    </div>
+  </div>
+</body>
+</html>

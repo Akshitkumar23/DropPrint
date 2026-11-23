@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropPrint Counter - QuickPrint Counter Station</title>
+  <link rel="stylesheet" href="/shopkeeper/style.css">
+</head>
+<body>
+  <div class="dashboard-shell">
+    
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <span class="brand-icon" aria-hidden="true">🖨️</span>
+        <div class="brand-text">
+          <h1 class="brand-title">DropPrint Counter</h1>
+          <span class="brand-sub">QuickPrint Counter Station • Self-Service Print Hub</span>
+        </div>
+      </div>
+
+      <div class="nav-center">
+        <div id="networkStatusBadge" class="network-badge"><span class="dot"></span> <span id="networkStatusText">Connecting...</span></div>
+        <div class="status-pill status-printer" title="Connected to Windows Default Print Spooler">
+          <span class="printer-icon" aria-hidden="true">🖨️</span>
+          <span id="printer-status-text">Spooler Ready</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button type="button" id="btn-open-tray" class="btn-header btn-secondary" title="Open Virtual Printer Tray folder on PC">
+          <span class="btn-icon" aria-hidden="true">📂</span>
+          <span>Virtual Printer Tray</span>
+        </button>
+        <button type="button" id="btn-show-qr" class="btn-header btn-primary" title="Display or print Customer QR Standee">
+          <span class="btn-icon" aria-hidden="true">📱</span>
+          <span>Show Customer QR</span>
+        </button>
+        <button type="button" id="btn-refresh" class="btn-header btn-secondary" title="Refresh order queue">
+          <span class="btn-icon" aria-hidden="true">🔄</span>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Toast Alert Container -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <!-- Main Content Grid -->
+    <main class="main-content">
+      
+      <!-- Metrics Overview Cards -->
+      <section class="metrics-grid" aria-label="Queue metrics">
+        <div class="metric-card metric-pending">
+          <div class="metric-icon-box" aria-hidden="true">💵</div>
+          <div class="metric-info">
+            <span class="metric-label">Cash to Collect</span>
+            <div class="metric-value" id="metric-cash">₹0.00</div>
+            <span class="metric-sub" id="metric-pending-count">0 orders waiting for cash</span>
+          </div>
+        </div>
+
+        <div class="metric-card metric-queue">
+          <div class="metric-icon-box" aria-hidden="true">📋</div>
+          <div class="metric-info">
+            <span class="metric-label">Active Orders</span>
+            <div class="metric-value" id="metric-active-count">0</div>
+            <span class="metric-sub">Orders in counter queue</span>
+          </div>
+        </div>
+
+        <div class="metric-card metric-completed">
+          <div class="metric-icon-box" aria-hidden="true">✅</div>
+          <div class="metric-info">
+            <span class="metric-label">Printed Today</span>
+            <div class="metric-value" id="metric-completed-count">0</div>
+            <span class="metric-sub" id="metric-completed-rev">Revenue: ₹0.00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Table Section -->
+      <section class="table-section" aria-label="Incoming jobs queue">
+        <div class="table-card">
+          
+          <!-- Table Toolbar -->
+          <div class="table-toolbar">
+            <div class="toolbar-left">
+              <h2 class="table-title">Incoming Print Jobs</h2>
+              <span id="queue-badge" class="badge-count">0 Jobs</span>
+            </div>
+
+            <div class="toolbar-right">
+              <!-- Filter Dropdown -->
+              <div class="filter-wrapper">
+                <label for="status-filter" class="filter-label">Filter:</label>
+                <select id="status-filter" class="filter-select">
+                  <option value="ACTIVE" selected>Active Queue (Auto-Clear 1m)</option>
+                  <option value="PENDING_PAYMENT">Pending Cash Only</option>
+                  <option value="ALL">All Order History</option>
+                </select>
+              </div>
+
+              <!-- Search Input -->
+              <div class="search-wrapper">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="text" id="queue-search" class="search-input" placeholder="Search by Job Code or file..." aria-label="Search print jobs">
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Content -->
+          <div class="table-responsive">
+            <table class="jobs-table">
+              <thead>
+                <tr>
+                  <th class="th-code">Job Code</th>
+                  <th class="th-file">File Name</th>
+                  <th class="th-specs">Details</th>
+                  <th class="th-cash">Cash to Collect</th>
+                  <th class="th-status">Status</th>
+                  <th class="th-action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="jobs-tbody">
+                <tr>
+                  <td colspan="6" class="table-loading">
+                    <div class="loading-state">
+                      <span class="loading-spinner"></span>
+                      <span>Loading incoming orders...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal: Customer QR Code Standee -->
+    <div id="qr-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-icon" aria-hidden="true">📱</span>
+            <h3 id="qr-modal-title">Generate Counter QR Standee</h3>
+          </div>
+          <button type="button" id="btn-close-modal" class="modal-close" aria-label="Close dialog">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Segmented Mode Toggle Tabs -->
+          <div class="qr-mode-tabs" role="tablist" aria-label="QR Network Mode">
+            <button type="button" id="tab-tunnel" class="qr-mode-btn active" role="tab" aria-selected="true" data-mode="tunnel">
+              🌐 Mobile Data 4G/5G (Cloudflare)
+            </button>
+            <button type="button" id="tab-wifi" class="qr-mode-btn" role="tab" aria-selected="false" data-mode="wifi">
+              📶 Shop Wi-Fi (Permanent LAN)
+            </button>
+          </div>
+
+          <!-- Mode Description / Explanatory Instructions -->
+          <div class="mode-info-box">
+            <p id="qr-mode-instruction" class="modal-instruction">
+              For local customers connected to shop Wi-Fi. (Permanent address that never changes as long as shop router is active).
+            </p>
+          </div>
+          
+          <div class="qr-canvas-wrapper">
+            <canvas id="qr-canvas" width="280" height="280"></canvas>
+            <div id="qr-mode-badge" class="qr-active-mode-badge">📶 Shop Wi-Fi Mode</div>
+          </div>
+
+          <!-- Active URL Copy Bar -->
+          <div class="url-copy-container">
+            <label for="active-qr-url" class="url-input-label">Direct Customer URL:</label>
+            <div class="url-input-group">
+              <input type="text" id="active-qr-url" class="url-input-field" readonly value="Loading..." aria-label="Customer direct URL">
+              <button type="button" id="btn-copy-url" class="btn-copy-url" title="Copy URL to clipboard">
+                📋 Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Details for both links -->
+          <div class="qr-urls-group">
+            <div class="url-row" id="row-wifi-link">
+              <span class="url-badge">Shop Wi-Fi (Permanent LAN):</span>
+              <a id="qr-lan-link" class="url-text" href="/customer" target="_blank">Loading local URL...</a>
+            </div>
+            <div class="url-row" id="row-tunnel-link">
+              <span class="url-badge">Mobile 4G/5G (Cloudflare Tunnel):</span>
+              <a id="qr-public-link" class="url-text" href="/customer" target="_blank">Loading public URL...</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btn-print-qr" class="btn-modal btn-primary">
+            🖨️ Print Counter Standee
+          </button>
+          <button type="button" id="btn-download-qr" class="btn-modal btn-secondary">
+            💾 Download Standee Image
+          </button>
+          <button type="button" id="btn-dismiss-modal" class="btn-modal btn-ghost">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Shared Modules & Dashboard Script -->
+  <script src="/shared/utils.js"></script>
+  <script src="/shared/state.js"></script>
+  <script src="/shared/api.js"></script>
+  <script type="module" src="/shopkeeper/dashboard.js"></script>
+</body>
+</html>

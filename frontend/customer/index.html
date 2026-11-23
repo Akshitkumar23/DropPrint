@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DropPrint - QuickPrint Self-Service</title>
+  <link rel="stylesheet" href="/customer/style.css">
+</head>
+<body>
+  <div class="mobile-container">
+    
+    <!-- DropPrint Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-icon" aria-hidden="true">🖨️</span>
+        <div class="header-text">
+          <h1 class="header-title">DropPrint</h1>
+          <p class="header-subtitle">QuickPrint Self-Service • Drop document, get pickup code &amp; pay cash at counter</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Error Alert Banner -->
+    <div id="error-banner" class="alert-box hidden" role="alert" aria-live="assertive"></div>
+
+    <!-- Step Progress Indicator -->
+    <nav class="steps-nav" aria-label="Print process steps">
+      <ol class="steps-list">
+        <li id="step-ind-1" class="step-item step-active" aria-current="step">
+          <span class="step-num">1</span>
+          <span class="step-label">Select</span>
+        </li>
+        <li class="step-arrow" aria-hidden="true">›</li>
+        <li id="step-ind-2" class="step-item">
+          <span class="step-num">2</span>
+          <span class="step-label">Options</span>
+        </li>
+        <li class="step-arrow" aria-hidden="true">›</li>
+        <li id="step-ind-3" class="step-item">
+          <span class="step-num">3</span>
+          <span class="step-label">Pickup</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Main Card -->
+    <main class="card main-card">
+      <!-- Step 1 & 2: Upload & Options Configuration Form -->
+      <form id="print-form" class="print-form" onsubmit="return false;">
+        
+        <!-- File Input Dropzone -->
+        <div class="form-group">
+          <input type="file" id="file-input" class="hidden-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*" aria-label="Select Document">
+          <label for="file-input" id="drop-zone" class="file-dropzone">
+            <div id="dropzone-idle" class="dropzone-state">
+              <span class="upload-icon" aria-hidden="true">📄</span>
+              <span class="upload-title">Upload PDF, Word (DOCX), Excel, PPT, or Image</span>
+              <span class="upload-desc">(Max 50 MB)</span>
+            </div>
+            <div id="dropzone-selected" class="dropzone-state hidden">
+              <span id="file-icon" class="file-icon" aria-hidden="true">📎</span>
+              <div class="file-info-text">
+                <div class="file-title-row">
+                  <span id="file-name" class="file-name">document.pdf</span>
+                  <span id="file-type-badge" class="file-type-badge">📄 PDF</span>
+                </div>
+                <span id="page-count-badge" class="page-count-badge">Detecting pages...</span>
+              </div>
+              <button type="button" id="btn-change-file" class="btn-change">Change</button>
+            </div>
+          </label>
+        </div>
+
+        <!-- Options Section (Revealed when document is chosen) -->
+        <div id="options-section" class="options-section hidden">
+          
+          <!-- Color Mode -->
+          <fieldset class="form-group form-fieldset">
+            <legend class="group-label">Color Mode</legend>
+            <div class="segmented-control" role="radiogroup">
+              <input type="radio" id="color-bw" name="color_mode" value="bw" class="seg-input" checked>
+              <label for="color-bw" class="seg-label">⚫ Black &amp; White (₹2.00/page)</label>
+
+              <input type="radio" id="color-col" name="color_mode" value="color" class="seg-input">
+              <label for="color-col" class="seg-label">🌈 Color (₹10.00/page)</label>
+            </div>
+          </fieldset>
+
+          <!-- Sides / Duplex -->
+          <fieldset class="form-group form-fieldset">
+            <legend class="group-label">Sides</legend>
+            <div class="segmented-control" role="radiogroup">
+              <input type="radio" id="duplex-single" name="duplex_mode" value="simplex" class="seg-input" checked>
+              <label for="duplex-single" class="seg-label">Single-sided</label>
+
+              <input type="radio" id="duplex-double" name="duplex_mode" value="duplex" class="seg-input">
+              <label for="duplex-double" class="seg-label">Double-sided (saves ₹0.50 per sheet)</label>
+            </div>
+          </fieldset>
+
+          <!-- Page Range -->
+          <div class="form-group">
+            <label for="page-range-input" class="group-label">Page Range</label>
+            <input type="text" id="page-range-input" name="page_range" class="form-input text-input" placeholder="e.g. 1-5, 8, 11-13" aria-label="Page Range">
+            <span id="page-range-helper" class="helper-caption">e.g. 1-5, 8, 11-13 (leave blank to print all pages)</span>
+          </div>
+
+          <!-- Copies Stepper -->
+          <div class="form-group">
+            <label for="copies-input" class="group-label">Copies</label>
+            <div class="copies-stepper">
+              <button type="button" id="btn-copies-minus" class="stepper-btn" aria-label="Decrease copies">&minus;</button>
+              <input type="number" id="copies-input" class="copies-input" value="1" min="1" max="99" inputmode="numeric">
+              <button type="button" id="btn-copies-plus" class="stepper-btn" aria-label="Increase copies">&plus;</button>
+            </div>
+          </div>
+
+          <!-- Real-Time Price Display -->
+          <div class="price-box" aria-live="polite">
+            <span class="price-label">Cash to Collect:</span>
+            <span id="total-price" class="price-val">₹2.00</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="button" id="btn-submit" class="btn-submit">
+            <span>🚀 Submit for Print</span>
+          </button>
+
+          <!-- Upload Progress Bar -->
+          <div id="progress-box" class="progress-wrap hidden">
+            <div class="progress-bar">
+              <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+            <span id="progress-text" class="progress-text">Uploading: 0%</span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Step 3: Pickup Code & Live Status Tracker -->
+      <section id="tracking-section" class="tracking-section hidden" aria-labelledby="pickup-heading">
+        <div class="pickup-card">
+          <span class="pickup-tag">ORDER SUBMITTED</span>
+          <h2 id="pickup-heading" class="pickup-title">Your Pickup Code:</h2>
+          <div id="pickup-code" class="pickup-code" aria-live="polite">PRN-XXXX</div>
+          <p class="pickup-msg">Please show this code at the counter and pay cash.</p>
+          <div class="amount-row">
+            <span>Cash to Pay:</span>
+            <span id="pickup-amount" class="pickup-amount">₹0.00</span>
+          </div>
+        </div>
+
+        <!-- Live Status Display -->
+        <div class="status-tracker">
+          <div id="status-card" class="status-card status-pending" aria-live="polite">
+            <span id="status-icon" class="status-icon" aria-hidden="true">⏳</span>
+            <div class="status-info">
+              <span id="status-title" class="status-title">Awaiting Payment</span>
+              <p id="status-desc" class="status-desc">Please show this code at the counter and pay cash.</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-new-print" class="btn-secondary">Print Another Document</button>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>DropPrint Counter Station • 🔒 Zero-Cloud Local Privacy</span>
+    </footer>
+  </div>
+
+  <!-- Shared Modules & Customer App Script -->
+  <script src="/shared/utils.js"></script>
+  <script src="/shared/state.js"></script>
+  <script src="/shared/api.js"></script>
+  <script type="module" src="/customer/app.js"></script>
+</body>
+</html>
