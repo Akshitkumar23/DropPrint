@@ -46,3 +46,8 @@ cloudflared.exe
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Internal development logs and state
+.gsd/
+progress.txt
+
