@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Border Gradients -->
+    <linearGradient id="primaryBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="greenBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="purpleBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="amberBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="roseBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#be123c"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Container Box -->
+  <rect width="1000" height="320" rx="16" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Connecting Data Stream Flow Line -->
+  <path d="M 170 145 L 830 145" stroke="#334155" stroke-width="3" stroke-dasharray="6 6"/>
+  <path d="M 170 145 L 830 145" stroke="#38bdf8" stroke-width="2" stroke-dasharray="12 180" opacity="0.8">
+    <animate attributeName="stroke-dashoffset" values="0;-384" dur="3s" repeatCount="indefinite" />
+  </path>
+
+  <!-- ==================== STEP 1: SCAN ==================== -->
+  <g transform="translate(30, 45)">
+    <rect width="170" height="200" rx="12" fill="url(#cardGrad)" stroke="url(#primaryBorder)" stroke-width="1.5"/>
+    <!-- Icon Circle -->
+    <circle cx="85" cy="45" r="24" fill="#0369a1" fill-opacity="0.25" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="85" y="52" font-size="20" text-anchor="middle" fill="#38bdf8">📱</text>
+    <!-- Step Badge -->
+    <rect x="55" y="78" width="60" height="18" rx="9" fill="#0369a1" fill-opacity="0.4"/>
+    <text x="85" y="91" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">STEP 1</text>
+    <!-- Text -->
+    <text x="85" y="118" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="14" font-weight="700" fill="#f8fafc" text-anchor="middle">Scan Standee</text>
+    <text x="85" y="136" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="11" fill="#94a3b8" text-anchor="middle">Any 4G/5G Camera</text>
+    <!-- Pill Footer -->
+    <rect x="25" y="155" width="120" height="24" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="85" y="171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="600" fill="#7dd3fc" text-anchor="middle">⚡ Zero App / No Wi-Fi</text>
+  </g>
+
+  <!-- ==================== STEP 2: CONFIGURE ==================== -->
+  <g transform="translate(225, 45)">
+    <rect width="170" height="200" rx="12" fill="url(#cardGrad)" stroke="url(#purpleBorder)" stroke-width="1.5"/>
+    <!-- Icon Circle -->
+    <circle cx="85" cy="45" r="24" fill="#6d28d9" fill-opacity="0.25" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="85" y="52" font-size="20" text-anchor="middle" fill="#a78bfa">📄</text>
+    <!-- Step Badge -->
+    <rect x="55" y="78" width="60" height="18" rx="9" fill="#6d28d9" fill-opacity="0.4"/>
+    <text x="85" y="91" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="700" fill="#c4b5fd" text-anchor="middle">STEP 2</text>
+    <!-- Text -->
+    <text x="85" y="118" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="14" font-weight="700" fill="#f8fafc" text-anchor="middle">Drop &amp; Select</text>
+    <text x="85" y="136" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="11" fill="#94a3b8" text-anchor="middle">PDF, Word, PPTX, Img</text>
+    <!-- Pill Footer -->
+    <rect x="25" y="155" width="120" height="24" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="85" y="171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="600" fill="#c4b5fd" text-anchor="middle">📑 Page Range '1-2'</text>
+  </g>
+
+  <!-- ==================== STEP 3: TOKEN ==================== -->
+  <g transform="translate(420, 45)">
+    <rect width="170" height="200" rx="12" fill="url(#cardGrad)" stroke="url(#amberBorder)" stroke-width="1.5"/>
+    <!-- Icon Circle -->
+    <circle cx="85" cy="45" r="24" fill="#b45309" fill-opacity="0.25" stroke="#fbbf24" stroke-width="1.5"/>
+    <text x="85" y="52" font-size="20" text-anchor="middle" fill="#fbbf24">🎟️</text>
+    <!-- Step Badge -->
+    <rect x="55" y="78" width="60" height="18" rx="9" fill="#b45309" fill-opacity="0.4"/>
+    <text x="85" y="91" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="700" fill="#fcd34d" text-anchor="middle">STEP 3</text>
+    <!-- Text -->
+    <text x="85" y="118" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="14" font-weight="700" fill="#f8fafc" text-anchor="middle">Pickup Code</text>
+    <text x="85" y="136" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="11" fill="#94a3b8" text-anchor="middle">e.g. PRN-8C10</text>
+    <!-- Pill Footer -->
+    <rect x="25" y="155" width="120" height="24" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="85" y="171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="600" fill="#fcd34d" text-anchor="middle">💰 Honest Rate ₹4.00</text>
+  </g>
+
+  <!-- ==================== STEP 4: CASH CONFIRM ==================== -->
+  <g transform="translate(615, 45)">
+    <rect width="170" height="200" rx="12" fill="url(#cardGrad)" stroke="url(#greenBorder)" stroke-width="1.5"/>
+    <!-- Icon Circle -->
+    <circle cx="85" cy="45" r="24" fill="#047857" fill-opacity="0.25" stroke="#34d399" stroke-width="1.5"/>
+    <text x="85" y="52" font-size="20" text-anchor="middle" fill="#34d399">💵</text>
+    <!-- Step Badge -->
+    <rect x="55" y="78" width="60" height="18" rx="9" fill="#047857" fill-opacity="0.4"/>
+    <text x="85" y="91" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="700" fill="#6ee7b7" text-anchor="middle">STEP 4</text>
+    <!-- Text -->
+    <text x="85" y="118" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="14" font-weight="700" fill="#f8fafc" text-anchor="middle">Collect Cash</text>
+    <text x="85" y="136" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="11" fill="#94a3b8" text-anchor="middle">Shopkeeper Counter</text>
+    <!-- Pill Footer -->
+    <rect x="25" y="155" width="120" height="24" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="85" y="171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="600" fill="#6ee7b7" text-anchor="middle">✅ Click Print &amp; Release</text>
+  </g>
+
+  <!-- ==================== STEP 5: PRINT & PURGE ==================== -->
+  <g transform="translate(805, 45)">
+    <rect width="170" height="200" rx="12" fill="url(#cardGrad)" stroke="url(#roseBorder)" stroke-width="1.5"/>
+    <!-- Icon Circle -->
+    <circle cx="85" cy="45" r="24" fill="#be123c" fill-opacity="0.25" stroke="#f43f5e" stroke-width="1.5"/>
+    <text x="85" y="52" font-size="20" text-anchor="middle" fill="#f43f5e">🖨️</text>
+    <!-- Step Badge -->
+    <rect x="55" y="78" width="60" height="18" rx="9" fill="#be123c" fill-opacity="0.4"/>
+    <text x="85" y="91" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="700" fill="#fda4af" text-anchor="middle">STEP 5</text>
+    <!-- Text -->
+    <text x="85" y="118" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="14" font-weight="700" fill="#f8fafc" text-anchor="middle">Spool &amp; Purge</text>
+    <text x="85" y="136" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="11" fill="#94a3b8" text-anchor="middle">Direct Hardware DC</text>
+    <!-- Pill Footer -->
+    <rect x="25" y="155" width="120" height="24" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="85" y="171" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="10" font-weight="600" fill="#fda4af" text-anchor="middle">🔒 60s Auto-Wipe</text>
+  </g>
+
+  <!-- Bottom Tagline -->
+  <text x="500" y="285" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto" font-size="12" fill="#64748b" text-anchor="middle">
+    DropPrint Seamless Express Architecture • Zero WhatsApp Hassle • Zero Cloud File Storage • 100% Privacy
+  </text>
+</svg>
