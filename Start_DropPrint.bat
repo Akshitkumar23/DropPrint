@@ -42,8 +42,19 @@ if %errorlevel% equ 0 (
     echo [OK] Cloudflare Tunnel is already running.
 ) else (
     if exist "cloudflared.exe" (
-        echo [*] Starting Cloudflare Secure Tunnel...
-        start /b "" "cloudflared.exe" tunnel --url http://127.0.0.1:8000
+        set "CF_TOKEN="
+        if exist ".env" (
+            for /f "tokens=1,2 delims==" %%A in ('findstr /i "^TUNNEL_TOKEN= ^CLOUDFLARE_TUNNEL_TOKEN=" .env 2^>nul') do (
+                if not "%%B"=="" set "CF_TOKEN=%%B"
+            )
+        )
+        if not "%CF_TOKEN%"=="" (
+            echo [*] Starting Permanent Cloudflare Named Tunnel...
+            start /b "" "cloudflared.exe" tunnel run --token %CF_TOKEN%
+        ) else (
+            echo [*] Starting Cloudflare Secure Tunnel...
+            start /b "" "cloudflared.exe" tunnel --url http://127.0.0.1:8000
+        )
         timeout /t 2 /nobreak >nul
     )
 )

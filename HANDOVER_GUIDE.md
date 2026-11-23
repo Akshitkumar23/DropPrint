@@ -36,6 +36,10 @@ Customer ko counter par aate hi kaise pata chalega ki wo phone se print kar sakt
 > **💡 QR Mode Ka Farq Samjhein:**
 > * **🌐 Mobile 4G/5G Mode (Default):** Customer apne phone ke Jio / Airtel / Vi mobile internet se scan karke upload karega. *Dukan ka Wi-Fi password share karne ki koi zaroorat nahi hai.*
 > * **📶 Shop Wi-Fi Mode (Offline Backup):** Agar kabhi area ka internet band ho jaye, toh dashboard me 'Wi-Fi' tab select karke Wi-Fi wala QR standee laga sakte hain, jo bina internet ke dukan ke router par chalta hai.
+>
+> **❓ Kya QR Code Bar-Bar Expire Ya Change Hoga?**
+> * **Shop Wi-Fi QR:** **KABHI BHI EXPIRE YA CHANGE NAHI HOTA!** Yeh local router IP par chalta hai aur bina internet ke bhi hamesha wahi rehta hai.
+> * **Mobile 4G/5G QR:** Jab tak PC chal raha hai, tunnel live rehti hai. Isko 100% permanent banane ke liye (taaki saalo-saal laminated poster na badalna pade), Cloudflare Zero Trust (Free) se permanent token lekar `C:\DropPrint\.env` me `TUNNEL_TOKEN=...` daal dein. Uske baad yeh QR **kabhi bhi change ya expire nahi hoga**!
 
 ---
 
