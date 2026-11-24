@@ -72,6 +72,37 @@ def health_check():
     }
 
 
+def resolve_active_tunnel_url() -> str:
+    """Discovers active tunnel URL: prefers permanent config, auto-detects live cloudflared log."""
+    env_tunnel = (
+        os.environ.get("PUBLIC_TUNNEL_URL", "").strip()
+        or settings.public_tunnel_url
+        or os.environ.get("PUBLIC_BASE_URL", "").strip()
+    )
+    if env_tunnel and "trycloudflare.com" not in env_tunnel:
+        return env_tunnel.rstrip("/")
+
+    # Check for live cloudflared log file in common paths
+    app_root = Path(__file__).resolve().parent.parent.parent
+    workspace_root = app_root.parent
+    for log_path in [
+        workspace_root / "cloudflared.log",
+        workspace_root / "logs" / "cloudflared.log",
+        app_root / "cloudflared.log",
+    ]:
+        if log_path.exists():
+            try:
+                import re
+                text = log_path.read_text(encoding="utf-8", errors="ignore")
+                matches = re.findall(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com", text)
+                if matches:
+                    return matches[-1].rstrip("/")
+            except Exception:
+                pass
+
+    return env_tunnel.rstrip("/")
+
+
 @router.get("/system/public-url")
 def get_public_url(request: Request, shop: str = "default"):
     """Returns dynamic LAN and public customer URLs for QR standee display."""
@@ -80,13 +111,7 @@ def get_public_url(request: Request, shop: str = "default"):
     scheme = request.url.scheme or "http"
     lan_base = f"{scheme}://{lan_ip}:{port}"
 
-    public_base = (
-        os.environ.get("PUBLIC_TUNNEL_URL", "").strip()
-        or settings.public_tunnel_url
-        or os.environ.get("PUBLIC_BASE_URL", "").strip()
-    ).rstrip("/")
-    if not public_base:
-        public_base = lan_base
+    public_base = resolve_active_tunnel_url() or lan_base
 
     return {
         "public_base_url": public_base,
@@ -106,11 +131,7 @@ def get_system_network_info(request: Request, shop: str = "default"):
     scheme = request.url.scheme or "http"
     lan_base = f"{scheme}://{lan_ip}:{port}"
 
-    tunnel_url = (
-        os.environ.get("PUBLIC_TUNNEL_URL", "").strip()
-        or settings.public_tunnel_url
-        or os.environ.get("PUBLIC_BASE_URL", "").strip()
-    ).rstrip("/")
+    tunnel_url = resolve_active_tunnel_url()
     tunnel_active = bool(
         tunnel_url
         and not tunnel_url.startswith("http://127.0.0.1")
@@ -146,11 +167,7 @@ def get_qr_info(request: Request, shop: str = "default"):
     port = request.url.port or settings.port or 8000
     scheme = request.url.scheme or "http"
     lan_base = f"{scheme}://{lan_ip}:{port}"
-    tunnel_url = (
-        os.environ.get("PUBLIC_TUNNEL_URL", "").strip()
-        or settings.public_tunnel_url
-        or os.environ.get("PUBLIC_BASE_URL", "").strip()
-    ).rstrip("/")
+    tunnel_url = resolve_active_tunnel_url()
 
     tunnel_active = bool(
         tunnel_url
@@ -176,11 +193,7 @@ def qrcode_png(request: Request, url: Optional[str] = None, shop: str = "default
             lan_ip = get_lan_ip()
             port = request.url.port or settings.port or 8000
             scheme = request.url.scheme or "http"
-            public_base = (
-                settings.public_tunnel_url
-                or os.environ.get("PUBLIC_TUNNEL_URL", "")
-                or os.environ.get("PUBLIC_BASE_URL", f"{scheme}://{lan_ip}:{port}")
-            ).rstrip("/")
+            public_base = resolve_active_tunnel_url() or f"{scheme}://{lan_ip}:{port}"
             target_url = f"{public_base}/customer/?shop={shop}"
         else:
             target_url = url

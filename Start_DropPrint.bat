@@ -53,7 +53,7 @@ if %errorlevel% equ 0 (
             start /b "" "cloudflared.exe" tunnel run --token %CF_TOKEN%
         ) else (
             echo [*] Starting Cloudflare Secure Tunnel...
-            start /b "" "cloudflared.exe" tunnel --url http://127.0.0.1:8000
+            start /b "" "cloudflared.exe" tunnel --url http://127.0.0.1:8000 --logfile "%~dp0cloudflared.log"
         )
         timeout /t 2 /nobreak >nul
     )
