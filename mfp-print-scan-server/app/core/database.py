@@ -24,13 +24,21 @@ logger = logging.getLogger(__name__)
 DATA_DIR = settings.data_dir
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-DB_PATH = Path(os.environ.get("PRINT_SYSTEM_DB_PATH", str(DATA_DIR / "print_system.db")))
+_env_db = os.environ.get("PRINT_SYSTEM_DB_PATH")
+if _env_db:
+    _p = Path(_env_db)
+    DB_PATH = _p if _p.is_absolute() else (ROOT / _p).resolve()
+else:
+    DB_PATH = (DATA_DIR / "print_system.db").resolve()
+
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 SESSION_SECRET = settings.session_secret
 PBKDF2_ITERATIONS = 100_000
 
 
 def get_db_connection() -> sqlite3.Connection:
     """Direct database connection with Row factory, foreign keys, and WAL mode enabled."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(DB_PATH), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")

@@ -19,7 +19,7 @@ import qrcode
 from fastapi import APIRouter, File, Form, HTTPException, Query, Request, Response, UploadFile, status
 from fastapi.concurrency import run_in_threadpool
 
-from app.core.config import settings
+from app.core.config import ROOT, settings
 from app.core.exceptions import SpoolerError
 from app.i18n import t
 from app.mdns_util import local_ipv4_addresses
@@ -83,20 +83,24 @@ def resolve_active_tunnel_url() -> str:
         return env_tunnel.rstrip("/")
 
     # Check for live cloudflared log file in common paths
-    app_root = Path(__file__).resolve().parent.parent.parent
-    workspace_root = app_root.parent
-    for log_path in [
-        workspace_root / "cloudflared.log",
-        workspace_root / "logs" / "cloudflared.log",
-        app_root / "cloudflared.log",
-    ]:
+    candidates = [
+        ROOT.parent / "cloudflared.log",
+        ROOT.parent / "logs" / "cloudflared.log",
+        ROOT / "cloudflared.log",
+        ROOT / "logs" / "cloudflared.log",
+        Path("cloudflared.log").resolve(),
+    ]
+    for log_path in candidates:
         if log_path.exists():
             try:
                 import re
                 text = log_path.read_text(encoding="utf-8", errors="ignore")
                 matches = re.findall(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com", text)
                 if matches:
-                    return matches[-1].rstrip("/")
+                    discovered = matches[-1].rstrip("/")
+                    os.environ["PUBLIC_TUNNEL_URL"] = discovered
+                    settings.public_tunnel_url = discovered
+                    return discovered
             except Exception:
                 pass
 
